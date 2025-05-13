@@ -26,3 +26,4 @@ $router->delete('/todos/{id}', 'TodoController@destroy');
 $router->options('{any:.*}', function () {
     return response('', 200);
 });
+$router->post('/register', 'UserController@signup');

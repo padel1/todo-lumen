@@ -12,5 +12,6 @@ class todo extends Model
         'completed',
     ];
 
-    public $timestamps = true; // Enable timestamps if you want to use created_at and updated_at
+    public $timestamps = true; 
+    
 }

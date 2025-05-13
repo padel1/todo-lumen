@@ -14,6 +14,7 @@ class TodoController extends Controller
             $isCompleted = filter_var($request->query('completed'), FILTER_VALIDATE_BOOLEAN);
             $query->where('completed', $isCompleted);
         }
+   
         return response()->json($query->get());
 
     }

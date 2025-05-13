@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTodossTable extends Migration
+class CreateTodosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class CreateTodossTable extends Migration
      */
     public function up()
     {
-        Schema::create('todoss', function (Blueprint $table) {
+        Schema::create('todos', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->boolean('completed')->default(false);
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ class CreateTodossTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('todoss');
+        Schema::dropIfExists('todos');
     }
 }
