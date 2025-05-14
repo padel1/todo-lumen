@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\log;
+use Tymon\JWTAuth\Facades\JWTAuth;
 class UserController extends Controller
 {
     /**
@@ -37,5 +38,42 @@ class UserController extends Controller
         $user = User::create($data);
 
         return response()->json(['message' => 'User created. Verify email.'], 201);
+    }
+
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email'    => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $data = $validator->validated();
+
+        if (!$token = JWTAuth::attempt($data)) {
+            return response()->json(['error' => 'Invalid credentials.'], 401);
+        }
+
+        // Generate a token or session for the user
+        // For example, using Laravel Passport or Sanctum
+
+        return response()->json(['message' => 'Login successful.','token'=>$token], 200);
+    }
+    
+    public function logout(Request $request)
+    {
+                
+            try {
+                
+                JWTAuth::invalidate(JWTAuth::parseToken());
+        
+                return response()->json(['message' => 'Successfully logged out.'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Failed to log out, please try again.'], 500);
+            }
+        
     }
 }

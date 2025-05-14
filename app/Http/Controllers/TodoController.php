@@ -4,12 +4,14 @@ use App\Models\todo;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Validator;
-
+use Tymon\JWTAuth\Facades\JWTAuth;
 class TodoController extends Controller
 {
     public function index(Request $request)
     {
-        $query =Todo::query();
+        $user = JWTAuth::parseToken()->authenticate();
+        $query=$user->todos();
+        
         if ($request->has('completed')) {
             $isCompleted = filter_var($request->query('completed'), FILTER_VALIDATE_BOOLEAN);
             $query->where('completed', $isCompleted);
@@ -32,8 +34,8 @@ class TodoController extends Controller
 
     $data = $validator->validated();
     $data['completed'] = $data['completed'] ?? false;
-
-    $todo = Todo::create($data);
+    $user = JWTAuth::parseToken()->authenticate(); 
+    $todo = $user->todos()->create($data);
 
     return response()->json($todo, 201);
 }

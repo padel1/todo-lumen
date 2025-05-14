@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Middleware\AuthenticateJWT;
 require_once __DIR__.'/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
@@ -65,6 +65,13 @@ $app->configure('app');
 
 $config = $app->make('config');
 $config->set('app.debug', true);
+$app->configure('jwt');
+
+
+$app->routeMiddleware([
+    'auth.jwt' => AuthenticateJWT::class,
+]);
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -110,6 +117,7 @@ $app->middleware([
 | can respond to, as well as the controllers that may handle them.
 |
 */
+$app->configure('auth');
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

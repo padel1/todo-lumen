@@ -16,14 +16,18 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
-
-$router->get('/todos', 'TodoController@index');
-$router->post('/todos', 'TodoController@store');
-$router->get('/todos/{id}', 'TodoController@show');
-$router->put('/todos/{id}', 'TodoController@update');
-$router->delete('/todos/{id}', 'TodoController@destroy');
+$router->group(['middleware' => 'auth.jwt'], function () use ($router) {
+    
+    $router->get('/todos', 'TodoController@index');
+    $router->post('/todos', 'TodoController@store');
+    $router->get('/todos/{id}', 'TodoController@show');
+    $router->put('/todos/{id}', 'TodoController@update');
+    $router->delete('/todos/{id}', 'TodoController@destroy');
+});
 // $router->post('/todos/{id}/complete', 'TodoController@markAsComplete');
 $router->options('{any:.*}', function () {
     return response('', 200);
 });
-$router->post('/register', 'UserController@signup');
+$router->post('/signup', 'UserController@signup');
+$router->post('/login','UserController@login');
+$router->post('/logout','UserController@logout');
